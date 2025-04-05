@@ -18,7 +18,7 @@ mongoose.connect(mongoUri)
   .then(() => console.log('✅ MongoDB connecté'))
   .catch(err => console.error('❌ Erreur MongoDB :', err));
 
-// Schémas
+// Schémas avec noms de collections personnalisés
 const User = mongoose.model('User', new mongoose.Schema({
   nom: String,
   email: String,
@@ -26,28 +26,7 @@ const User = mongoose.model('User', new mongoose.Schema({
   familleId: String,
   role: String,
   photoProfil: String
-}));
-
-const Tache = mongoose.model('Tache', new mongoose.Schema({
-  titre: String,
-  description: String,
-  enfantId: String,
-  familleId: String,
-  date: String,
-}));
-
-const Validation = mongoose.model('Validation', new mongoose.Schema({
-  tacheId: String,
-  titre: String,
-  description: String,
-  recompenseType: String,
-  recompenseValeur: String,
-  enfant: String,
-  estValideeParEnfant: Boolean,
-  estApprouvee: Boolean,
-  date: String,
-  preuve: String
-}));
+}), 'utilisateurs');
 
 const ModeleTache = mongoose.model('ModeleTache', new mongoose.Schema({
   titre: String,
@@ -62,7 +41,20 @@ const ModeleTache = mongoose.model('ModeleTache', new mongoose.Schema({
   vendredi: Boolean,
   samedi: Boolean,
   dimanche: Boolean,
-}));
+}), 'modeles_taches');
+
+const Validation = mongoose.model('Validation', new mongoose.Schema({
+  tacheId: String,
+  titre: String,
+  description: String,
+  recompenseType: String,
+  recompenseValeur: String,
+  enfant: String,
+  estValideeParEnfant: Boolean,
+  estApprouvee: Boolean,
+  date: String,
+  preuve: String
+}), 'validationsTaches');
 
 // Routes AUTH
 app.post('/login', async (req, res) => {
