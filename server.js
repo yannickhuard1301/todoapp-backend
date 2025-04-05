@@ -126,15 +126,6 @@ app.delete('/utilisateurs/:id', async (req, res) => {
   }
 });
 
-app.get('/users', async (req, res) => {
-  try {
-    const users = await Utilisateur.find();
-    res.json(users);
-  } catch (e) {
-    res.status(500).json({ error: "Erreur chargement utilisateurs : " + e.message });
-  }
-});
-
 // Routes MODELES DE TACHES
 app.get('/modeles-taches', async (req, res) => {
   try {
