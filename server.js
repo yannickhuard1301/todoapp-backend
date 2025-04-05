@@ -206,3 +206,32 @@ app.listen(port, () => {
     : `http://localhost:${port}`;
   console.log(`🚀 Serveur backend lancé sur ${baseUrl}`);
 });
+
+app.put('/utilisateurs/:id/photo', async (req, res) => {
+  try {
+    const { photoProfil } = req.body;
+    await Utilisateur.findByIdAndUpdate(req.params.id, { photoProfil });
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: "Erreur mise à jour photo : " + e.message });
+  }
+});
+
+app.delete('/utilisateurs/:id', async (req, res) => {
+  try {
+    await Utilisateur.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: "Erreur suppression utilisateur : " + e.message });
+  }
+});
+
+app.get('/users', async (req, res) => {
+  try {
+    const users = await Utilisateur.find();
+    res.json(users);
+  } catch (e) {
+    res.status(500).json({ error: "Erreur chargement utilisateurs : " + e.message });
+  }
+});
+
