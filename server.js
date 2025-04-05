@@ -78,10 +78,18 @@ app.get('/utilisateurs/famille/:familleId', async (req, res) => {
 
 app.get('/utilisateurs/exists', async (req, res) => {
   const { nom, email } = req.query;
+
+  const conditions = [];
+
+  if (nom) conditions.push({ nom });
+  if (email) conditions.push({ email });
+
+  if (conditions.length === 0) {
+    return res.status(400).json({ error: "Nom ou email requis." });
+  }
+
   try {
-    const user = await Utilisateur.findOne({
-      $or: [{ nom }, { email }],
-    });
+    const user = await Utilisateur.findOne({ $or: conditions });
     res.json({ exists: !!user });
   } catch (err) {
     res.status(500).json({ error: 'Erreur serveur lors de la vérification.' });
