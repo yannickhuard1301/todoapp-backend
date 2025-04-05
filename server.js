@@ -19,7 +19,7 @@ mongoose.connect(mongoUri)
   .catch(err => console.error('❌ Erreur MongoDB :', err));
 
 // Schémas avec noms de collections personnalisés
-const User = mongoose.model('User', new mongoose.Schema({
+const Utilisateur = mongoose.model('Utilisateur', new mongoose.Schema({
   nom: String,
   email: String,
   password: String,
@@ -67,9 +67,9 @@ app.post('/login', async (req, res) => {
 });
 
 // Routes UTILISATEURS
-app.get('/users/famille/:familleId', async (req, res) => {
+app.get('/utilisateurs/famille/:familleId', async (req, res) => {
   try {
-    const users = await User.find({ familleId: req.params.familleId });
+    const users = await Utilisateur.find({ familleId: req.params.familleId });
     res.json(users);
   } catch (e) {
     res.status(500).json({ error: 'Erreur serveur : ' + e.message });
