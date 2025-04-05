@@ -59,7 +59,7 @@ const Validation = mongoose.model('Validation', new mongoose.Schema({
 // Routes AUTH
 app.post('/login', async (req, res) => {
   const { identifiant, password } = req.body;
-  const user = await User.findOne({
+  const user = await Utilisateur.findOne({
     $or: [{ email: identifiant }, { nom: identifiant }],
     password,
   });
@@ -79,7 +79,7 @@ app.get('/utilisateurs/famille/:familleId', async (req, res) => {
 app.get('/utilisateurs/exists', async (req, res) => {
   const { nom, email } = req.query;
   try {
-    const user = await User.findOne({
+    const user = await Utilisateur.findOne({
       $or: [{ nom }, { email }],
     });
     res.json({ exists: !!user });
@@ -90,7 +90,7 @@ app.get('/utilisateurs/exists', async (req, res) => {
 
 app.post('/utilisateurs', async (req, res) => {
   try {
-    const newUser = new User(req.body);
+    const newUser = new Utilisateur(req.body);
     await newUser.save();
     res.status(201).json({ success: true });
   } catch (e) {
@@ -100,10 +100,38 @@ app.post('/utilisateurs', async (req, res) => {
 
 app.put('/utilisateurs/:id', async (req, res) => {
   try {
-    await User.findByIdAndUpdate(req.params.id, req.body);
+    await Utilisateur.findByIdAndUpdate(req.params.id, req.body);
     res.json({ success: true });
   } catch (e) {
     res.status(500).json({ error: 'Erreur mise à jour : ' + e.message });
+  }
+});
+
+app.put('/utilisateurs/:id/photo', async (req, res) => {
+  try {
+    const { photoProfil } = req.body;
+    await Utilisateur.findByIdAndUpdate(req.params.id, { photoProfil });
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: "Erreur mise à jour photo : " + e.message });
+  }
+});
+
+app.delete('/utilisateurs/:id', async (req, res) => {
+  try {
+    await Utilisateur.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: "Erreur suppression utilisateur : " + e.message });
+  }
+});
+
+app.get('/users', async (req, res) => {
+  try {
+    const users = await Utilisateur.find();
+    res.json(users);
+  } catch (e) {
+    res.status(500).json({ error: "Erreur chargement utilisateurs : " + e.message });
   }
 });
 
@@ -206,32 +234,3 @@ app.listen(port, () => {
     : `http://localhost:${port}`;
   console.log(`🚀 Serveur backend lancé sur ${baseUrl}`);
 });
-
-app.put('/utilisateurs/:id/photo', async (req, res) => {
-  try {
-    const { photoProfil } = req.body;
-    await Utilisateur.findByIdAndUpdate(req.params.id, { photoProfil });
-    res.json({ success: true });
-  } catch (e) {
-    res.status(500).json({ error: "Erreur mise à jour photo : " + e.message });
-  }
-});
-
-app.delete('/utilisateurs/:id', async (req, res) => {
-  try {
-    await Utilisateur.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
-  } catch (e) {
-    res.status(500).json({ error: "Erreur suppression utilisateur : " + e.message });
-  }
-});
-
-app.get('/users', async (req, res) => {
-  try {
-    const users = await Utilisateur.find();
-    res.json(users);
-  } catch (e) {
-    res.status(500).json({ error: "Erreur chargement utilisateurs : " + e.message });
-  }
-});
-
