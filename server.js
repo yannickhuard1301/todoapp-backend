@@ -12,12 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ MongoDB connecté'))
-.catch((err) => console.error('❌ Erreur MongoDB :', err));
+const mongoUri = process.env.MONGO_URI || "mongodb://yannickhuard1301:Leonie2022@todoapp-shard-00-00.thfi6.mongodb.net:27017,todoapp-shard-00-01.thfi6.mongodb.net:27017,todoapp-shard-00-02.thfi6.mongodb.net:27017/todoapp?ssl=true&replicaSet=atlas-4v0a3t-shard-0&authSource=admin&retryWrites=true&w=majority";
+
+mongoose.connect(mongoUri)
+  .then(() => console.log('✅ MongoDB connecté'))
+  .catch((err) => console.error('❌ Erreur MongoDB :', err));
 
 // Schémas
 const User = mongoose.model('User', new mongoose.Schema({
